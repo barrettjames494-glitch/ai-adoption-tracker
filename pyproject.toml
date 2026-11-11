@@ -1,0 +1,9 @@
+[project]
+name = "ai-adoption-tracker"
+version = "0.1.0"
+description = "Extract, validate and report on open-source AI tool adoption using the GitHub API."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
