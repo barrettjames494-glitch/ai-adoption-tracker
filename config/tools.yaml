@@ -1,0 +1,33 @@
+# AI tools to track. Each entry maps to a public GitHub repository.
+# `category` groups tools in the report; edit freely.
+tools:
+  - name: Ollama
+    repo: ollama/ollama
+    category: Local inference
+  - name: llama.cpp
+    repo: ggml-org/llama.cpp
+    category: Local inference
+  - name: vLLM
+    repo: vllm-project/vllm
+    category: Model serving
+  - name: Transformers
+    repo: huggingface/transformers
+    category: Model library
+  - name: LangChain
+    repo: langchain-ai/langchain
+    category: Orchestration
+  - name: LlamaIndex
+    repo: run-llama/llama_index
+    category: Orchestration
+  - name: AutoGen
+    repo: microsoft/autogen
+    category: Agents
+  - name: CrewAI
+    repo: crewAIInc/crewAI
+    category: Agents
+  - name: OpenAI Python SDK
+    repo: openai/openai-python
+    category: SDK
+  - name: Anthropic Python SDK
+    repo: anthropics/anthropic-sdk-python
+    category: SDK
