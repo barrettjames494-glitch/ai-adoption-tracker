@@ -15,6 +15,9 @@ import pandas as pd
 
 WINDOW_WEEKS = 12
 
+# Below this many commits in the earlier 12-week window, % growth is too noisy to trust.
+MIN_PRIOR_COMMITS = 100
+
 # Weights for the composite score. They are a judgement call: tune them and say so in the README.
 SCORE_WEIGHTS = {
     "commit_growth_pct": 0.35,
@@ -31,7 +34,7 @@ def _activity(weekly: pd.DataFrame) -> pd.DataFrame:
         commits = grp.sort_values("week_start")["commits"].iloc[:-1]
         recent = commits.iloc[-WINDOW_WEEKS:].sum()
         prior = commits.iloc[-2 * WINDOW_WEEKS:-WINDOW_WEEKS].sum()
-        growth = (recent - prior) / prior * 100 if prior else None
+        growth = (recent - prior) / prior * 100 if prior >= MIN_PRIOR_COMMITS else None
         rows.append({"tool_id": tid, "commits_12w": int(recent), "commit_growth_pct": growth})
     return pd.DataFrame(rows, columns=["tool_id", "commits_12w", "commit_growth_pct"])
 
@@ -51,7 +54,7 @@ def _releases(releases: pd.DataFrame, as_of: pd.Timestamp) -> pd.DataFrame:
 
 
 def _percentile_rank(s: pd.Series) -> pd.Series:
-    return s.rank(pct=True, method="average").fillna(0)
+    return s.rank(pct=True, method="average").fillna(0.5)
 
 
 def compute(tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
@@ -94,6 +97,10 @@ def headline_insights(m: pd.DataFrame, top_n: int = 3) -> list[str]:
 
     cat = m.groupby("category")["momentum_score"].mean().sort_values(ascending=False)
     out.append(f"Strongest category on average: {cat.index[0]} (score {cat.iloc[0]:.0f}).")
+
+    low_base = m.loc[m["commit_growth_pct"].isna(), "name"].tolist()
+    if low_base:
+        out.append(f"Growth not scored for {', '.join(low_base)}: too few commits for a reliable % change.")
 
     load = m.sort_values("issues_per_1k_stars", ascending=False).iloc[0]
     out.append(f"Heaviest open-issue load relative to adoption: {load['name']} ({load['issues_per_1k_stars']:.0f} per 1k stars).")
