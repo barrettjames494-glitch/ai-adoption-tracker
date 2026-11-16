@@ -1,8 +1,8 @@
 # AI Tool Adoption Tracker
 
-I'm James, a data and analytics consultant. Most of my recent work has been helping organisations roll out AI tools and report on how they're landing. One question keeps coming up: *which tools are actually gaining traction, and which are quietly stalling?*
+I'm James, a data and analytics consultant. Most of my recent work has been helping organisations roll out AI tools and report on how they're landing. One question keeps coming up: *which tools are actually gaining traction, and which are stalling?*
 
-I built this project to answer that question with public data, and to practise writing the kind of production-style Python pipeline I'd want behind any adoption report I put in front of senior stakeholders.
+I built this project to answer that question, and to practise writing the kind of production-style Python pipeline I'd want behind any adoption report I put in front of senior stakeholders.
 
 It tracks ten popular open-source AI tools (Ollama, LangChain, vLLM, the OpenAI and Anthropic SDKs and others), pulls their activity from the GitHub API, checks the data is trustworthy, and turns it into a short report with plain-English takeaways.
 
