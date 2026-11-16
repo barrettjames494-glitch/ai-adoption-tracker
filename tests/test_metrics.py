@@ -30,3 +30,12 @@ def test_insights_mention_leader(tables):
     m = metrics.compute(tables)
     insights = metrics.headline_insights(m)
     assert m.iloc[0]["name"] in insights[0]
+
+
+def test_small_base_growth_is_not_scored():
+    # 12 weeks of 2 commits (24 in total, below the threshold), then 12 weeks of 15, plus a partial week.
+    weeks = pd.date_range("2026-01-04", periods=25, freq="W-SUN", tz="UTC")
+    weekly = pd.DataFrame({"tool_id": "t", "week_start": weeks, "commits": [2] * 12 + [15] * 12 + [0]})
+    act = metrics._activity(weekly)
+    assert act.loc[0, "commits_12w"] == 180
+    assert pd.isna(act.loc[0, "commit_growth_pct"])
